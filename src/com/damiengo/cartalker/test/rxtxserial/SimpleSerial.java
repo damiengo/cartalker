@@ -83,7 +83,7 @@ public class SimpleSerial {
 
     public static void main(String[] args) {
         try {
-            (new SimpleSerial()).connect("COM3");
+            (new SimpleSerial()).connect("COM9");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

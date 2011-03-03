@@ -9,19 +9,18 @@ import java.util.Enumeration;
 public class SerialPortDiscoverer {
 
     public static void main(String args[]) {
-        Enumeration thePorts = CommPortIdentifier.getPortIdentifiers();
+        Enumeration<CommPortIdentifier> thePorts = CommPortIdentifier
+                .getPortIdentifiers();
         while (thePorts.hasMoreElements()) {
-            CommPortIdentifier com = (CommPortIdentifier) thePorts
-                    .nextElement();
+            CommPortIdentifier com = thePorts.nextElement();
             switch (com.getPortType()) {
             case CommPortIdentifier.PORT_SERIAL:
                 try {
                     CommPort thePort = com.open("CommUtil", 50);
                     thePort.close();
-                    System.out.println("Port " + com.getName() + " available.");
+                    System.out.println("Port " + com.getName() + " is available.");
                 } catch (PortInUseException e) {
-                    System.out.println("Port " + com.getName()
-                            + " is in use.");
+                    System.out.println("Port " + com.getName() + " is in use.");
                 } catch (Exception e) {
                     System.err.println("Failed to open port " + com.getName());
                     e.printStackTrace();

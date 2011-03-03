@@ -38,101 +38,106 @@ import gnu.io.*;
 
 /**
  * Class declaration
- *
- *
+ * 
+ * 
  * @author
  * @version 1.10, 08/04/00
  */
 public class HelloWorld {
-    static Enumeration        portList;
+    static Enumeration portList;
     static CommPortIdentifier portId;
-    static String         messageString = "Hello, world!";
-    static SerialPort         serialPort;
-    static OutputStream       outputStream;
-    static boolean        outputBufferEmptyFlag = false;
+    static String messageString = "ATZ";
+    static SerialPort serialPort;
+    static OutputStream outputStream;
+    static InputStream inputStream;
+    static boolean outputBufferEmptyFlag = false;
+    static int inte;
+
     /**
      * Method declaration
-     *
-     *
+     * 
+     * 
      * @param args
-     *
+     * 
      * @see
      */
     public static void main(String[] args) {
-    boolean portFound = false;
-    // /dev/term/a
-    String defaultPort = "COM3";
+        boolean portFound = false;
+        // /dev/term/a
+        String defaultPort = "COM9";
 
-    if (args.length > 0) {
-        defaultPort = args[0];
-    } 
+        if (args.length > 0) {
+            defaultPort = args[0];
+        }
 
-    portList = CommPortIdentifier.getPortIdentifiers();
+        portList = CommPortIdentifier.getPortIdentifiers();
 
-    while (portList.hasMoreElements()) {
-        portId = (CommPortIdentifier) portList.nextElement();
+        while (portList.hasMoreElements()) {
+            portId = (CommPortIdentifier) portList.nextElement();
 
-        if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+            if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
 
-        if (portId.getName().equals(defaultPort)) {
-            System.out.println("Found port " + defaultPort);
+                if (portId.getName().equals(defaultPort)) {
+                    System.out.println("Found port " + defaultPort);
 
-            portFound = true;
+                    portFound = true;
 
-            try {
-            serialPort = 
-                (SerialPort) portId.open("SimpleWrite", 2000);
-            } catch (PortInUseException e) {
-            System.out.println("Port in use.");
+                    try {
+                        serialPort = (SerialPort) portId.open("SimpleWrite",
+                                2000);
+                    } catch (PortInUseException e) {
+                        System.out.println("Port in use.");
 
-            continue;
-            } 
+                        continue;
+                    }
 
-            try {
-            outputStream = serialPort.getOutputStream();
-            } catch (IOException e) {}
+                    try {
+                        outputStream = serialPort.getOutputStream();
+                        inputStream = serialPort.getInputStream();
+                    } catch (IOException e) {
+                    }
 
-            try {
-            serialPort.setSerialPortParams(9600, 
-                               SerialPort.DATABITS_8, 
-                               SerialPort.STOPBITS_1, 
-                               SerialPort.PARITY_NONE);
-            } catch (UnsupportedCommOperationException e) {}
-    
+                    try {
+                        serialPort.setSerialPortParams(9600,
+                                SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+                                SerialPort.PARITY_NONE);
+                    } catch (UnsupportedCommOperationException e) {
+                    }
 
-            try {
-                serialPort.notifyOnOutputEmpty(true);
-            } catch (Exception e) {
-            System.out.println("Error setting event notification");
-            System.out.println(e.toString());
-            System.exit(-1);
+                    try {
+                        serialPort.notifyOnOutputEmpty(true);
+                    } catch (Exception e) {
+                        System.out.println("Error setting event notification");
+                        System.out.println(e.toString());
+                        System.exit(-1);
+                    }
+
+                    System.out.println("Writing \"" + messageString + "\" to "
+                            + serialPort.getName());
+
+                    try {
+                        outputStream.write(messageString.getBytes());
+                        while((inte = inputStream.read()) != -1) {
+                            System.out.println("Integer: "+inte);
+                        }
+                        
+                    } catch (IOException e) {
+                    }
+
+                    try {
+                        Thread.sleep(2000); // Be sure data is xferred before
+                                            // closing
+                    } catch (Exception e) {
+                    }
+                    serialPort.close();
+                    System.exit(1);
+                }
             }
-            
-            
-            System.out.println(
-                "Writing \""+messageString+"\" to "
-            +serialPort.getName());
+        }
 
-            try {
-            outputStream.write(messageString.getBytes());
-            } catch (IOException e) {}
-
-            try {
-               Thread.sleep(2000);  // Be sure data is xferred before closing
-            } catch (Exception e) {}
-            serialPort.close();
-            System.exit(1);
-        } 
-        } 
-    } 
-
-    if (!portFound) {
-        System.out.println("port " + defaultPort + " not found.");
-    } 
-    } 
-
+        if (!portFound) {
+            System.out.println("port " + defaultPort + " not found.");
+        }
+    }
 
 }
-
-
-
