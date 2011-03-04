@@ -1,5 +1,7 @@
 package com.damiengo.cartalker.interpretor;
 
-public class ResponseInterpretor {
+public interface ResponseInterpretor {
 
+    public boolean process(String message);
+    
 }

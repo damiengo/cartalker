@@ -1,5 +1,6 @@
 package com.damiengo.cartalker.communicator;
 
+
 /**
  * This interface describes a communication.
  * 
@@ -8,6 +9,6 @@ package com.damiengo.cartalker.communicator;
  */
 public interface Communication {
 
-    public boolean run(Reader reader, Writer writer);
+    public void run();
     
 }
