@@ -1,5 +1,5 @@
 package com.damiengo.cartalker.communicator;
 
-public class SerialReader {
+public interface Writer extends Runnable {
 
 }
