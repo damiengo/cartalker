@@ -24,7 +24,7 @@ public class SimpleSerial {
 
             if (commPort instanceof SerialPort) {
                 SerialPort serialPort = (SerialPort) commPort;
-                serialPort.setSerialPortParams(57600, SerialPort.DATABITS_8,
+                serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8,
                         SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
                 InputStream in = serialPort.getInputStream();
